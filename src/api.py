@@ -60,6 +60,30 @@ app.add_middleware(
 )
 
 
+@app.get("/")
+def root() -> dict[str, object]:
+    return sanitize_for_json(
+        {
+            "app": settings.app_name,
+            "version": settings.app_version,
+            "status": "ok",
+            "service": "api",
+            "message": "Electricity load forecasting API is running.",
+            "primary_country_code": settings.primary_country_code,
+            "docs_url": "/docs",
+            "health_url": "/health",
+            "key_endpoints": [
+                "/forecast",
+                "/eda/summary",
+                "/eda/plots",
+                "/countries",
+                "/monitoring/status",
+                "/model/status",
+            ],
+        }
+    )
+
+
 @app.middleware("http")
 async def request_size_limit(request: Request, call_next):
     content_length = request.headers.get("content-length")

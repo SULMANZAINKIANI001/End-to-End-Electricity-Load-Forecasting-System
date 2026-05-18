@@ -28,7 +28,7 @@ HISTORY_PRESETS = {
     "Custom": None,
 }
 DEFAULT_HISTORY_PRESET = "90 days"
-UI_RESULT_VERSION = "operator-console-uncertainty-v2"
+UI_RESULT_VERSION = "operator-console-country-payload-v3"
 FALLBACK_SETTINGS = {
     "max_history_days": 730,
     "forecast_history_days": 45,
@@ -491,6 +491,16 @@ def reset_saved_forecast() -> None:
     st.session_state.pop("last_forecast_result", None)
     st.session_state.pop("last_forecast_payload", None)
     st.session_state["last_forecast_result_version"] = UI_RESULT_VERSION
+
+
+def forecast_payload_label(payload: dict | None) -> str:
+    if not isinstance(payload, dict):
+        return "another selection"
+    return (
+        f"{payload.get('country_code', 'unknown')}, "
+        f"{payload.get('start', 'unknown')} to {payload.get('end', 'unknown')}, "
+        f"{payload.get('horizon', 'unknown')}h"
+    )
 
 
 def forecast_result_is_stale(result: dict | None) -> bool:
@@ -1141,6 +1151,21 @@ if country_info:
     )
 
 tabs = st.tabs(["Forecast", "EDA", "Monitoring", "About"])
+current_forecast_payload = {
+    "country_code": country_code,
+    "start": start_date.isoformat(),
+    "end": end_date.isoformat(),
+    "horizon": horizon,
+}
+saved_forecast_payload = st.session_state.get("last_forecast_payload", {})
+if (
+    isinstance(saved_forecast_payload, dict)
+    and saved_forecast_payload.get("country_code")
+    and saved_forecast_payload.get("country_code") != country_code
+):
+    reset_saved_forecast()
+    saved_forecast_payload = {}
+saved_forecast_matches_current = bool(st.session_state.get("last_forecast_result")) and saved_forecast_payload == current_forecast_payload
 
 with tabs[0]:
     section_header("Forecast workspace", "Run a live-source forecast, inspect uncertainty, and translate the result into operator action.")
@@ -1163,13 +1188,8 @@ with tabs[0]:
             )
             st.caption("TensorFlow training should use Python 3.10. Restart FastAPI after training so the artifacts load.")
 
-    if run_forecast or st.session_state.get("last_forecast_result"):
-        payload = {
-            "country_code": country_code,
-            "start": start_date.isoformat(),
-            "end": end_date.isoformat(),
-            "horizon": horizon,
-        }
+    if run_forecast or saved_forecast_matches_current:
+        payload = current_forecast_payload
         spinner_text = "Fetching recent load and generating forecast..." if run_forecast else "Restoring the last forecast..."
         with st.spinner(spinner_text):
             try:
@@ -1184,9 +1204,6 @@ with tabs[0]:
                         reset_saved_forecast()
                         st.warning("The saved forecast used older uncertainty-band logic. It was cleared; run a new forecast.")
                         st.stop()
-                    cached_payload = st.session_state.get("last_forecast_payload", {})
-                    if cached_payload and cached_payload != payload:
-                        st.caption("Showing the last generated forecast. Click Run forecast to refresh it for the current sidebar controls.")
                 forecast_df = pd.DataFrame(result["forecast"])
                 if forecast_df.empty:
                     st.warning("No forecast points were returned.")
@@ -1362,7 +1379,14 @@ with tabs[0]:
             except Exception as exc:
                 show_dashboard_error(exc)
     else:
-        st.info("Run a forecast to see the active data source, uncertainty band, model quality, and plain-language explanation.")
+        if st.session_state.get("last_forecast_result") and st.session_state.get("last_forecast_payload"):
+            st.info(
+                "A saved forecast exists for "
+                f"{forecast_payload_label(st.session_state.get('last_forecast_payload'))}. "
+                "Run forecast to generate a fresh result for the current sidebar selection."
+            )
+        else:
+            st.info("Run a forecast to see the active data source, uncertainty band, model quality, and plain-language explanation.")
 
 with tabs[1]:
     section_header("Exploratory data analysis", "Validate the selected history window before trusting a forecast.")

@@ -1,0 +1,28 @@
+{
+  "country_code": "DE_LU",
+  "data_source": "smard_dynamic_fallback",
+  "data_source_detail": "Bundesnetzagentur SMARD actual consumption, filter 410, region DE-LU",
+  "sequence_length": 168,
+  "horizon": 24,
+  "train_start": "2024-05-15T00:00:00+02:00",
+  "train_end": "2026-05-14T23:00:00+02:00",
+  "rows": 17520,
+  "samples": 17329,
+  "epochs_ran": 10,
+  "metrics": {
+    "mae": 3073.171,
+    "rmse": 4046.582,
+    "mape": 5.698
+  },
+  "baseline_metrics": {
+    "mae": 12736.376,
+    "rmse": 15487.722,
+    "mape": 21.066
+  },
+  "residuals": {
+    "mean_residual_mw": 482.991,
+    "std_residual_mw": 4017.654,
+    "p90_abs_residual_mw": 6505.919
+  },
+  "trained_at": "2026-05-17T20:00:36.581595+00:00"
+}

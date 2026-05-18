@@ -1,0 +1,15 @@
+{
+  "country_code": "PK",
+  "sequence_length": 168,
+  "horizon": 24,
+  "train_start": "2018-05-01T23:00:00+05:00",
+  "train_end": "2020-04-30T23:00:00+05:00",
+  "rows": 17521,
+  "samples": 17330,
+  "epochs_ran": 3,
+  "metrics": {
+    "mae": 1082.725,
+    "rmse": 1319.943,
+    "mape": 11.361
+  }
+}

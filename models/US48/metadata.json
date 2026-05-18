@@ -1,0 +1,28 @@
+{
+  "country_code": "US48",
+  "data_source": "eia_live",
+  "data_source_detail": "EIA hourly RTO demand, respondent US48, type D",
+  "sequence_length": 168,
+  "horizon": 24,
+  "train_start": "2024-05-15T00:00:00+00:00",
+  "train_end": "2026-05-15T00:00:00+00:00",
+  "rows": 17521,
+  "samples": 17330,
+  "epochs_ran": 5,
+  "metrics": {
+    "mae": 18502.246,
+    "rmse": 23717.89,
+    "mape": 3.968
+  },
+  "baseline_metrics": {
+    "mae": 59760.617,
+    "rmse": 76088.867,
+    "mape": 12.57
+  },
+  "residuals": {
+    "mean_residual_mw": -2505.154,
+    "std_residual_mw": 23585.219,
+    "p90_abs_residual_mw": 39077.619
+  },
+  "trained_at": "2026-05-17T21:12:42.201928+00:00"
+}

@@ -1,0 +1,12 @@
+.env
+.venv/
+.venv310/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.streamlit/secrets.toml
+data/raw/
+notebooks/.ipynb_checkpoints/
+logs/

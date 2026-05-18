@@ -304,6 +304,7 @@ http://localhost:8000
 ├── docker-compose.yml
 ├── Procfile
 ├── runtime.txt
+├── requirements-api.txt
 ├── requirements.txt
 ├── requirements-dashboard.txt
 ├── README.md
@@ -343,6 +344,9 @@ http://localhost:8000
 | `src/explain.py` | Built-in and optional AI forecast explanations |
 | `src/monitoring.py` | Readiness checks, warnings, last forecast, recent errors |
 | `app.py` | Streamlit dashboard |
+| `requirements-api.txt` | FastAPI, training, and TensorFlow dependencies |
+| `requirements.txt` | Streamlit dashboard dependencies used by Streamlit Cloud |
+| `requirements-dashboard.txt` | Alias file for dashboard-only local installs |
 | `Dockerfile` | Container image for API or dashboard |
 | `docker-compose.yml` | Runs API and dashboard together |
 | `report.md` | Two-page report draft |
@@ -391,20 +395,20 @@ python -m venv .venv
 Install API and training dependencies:
 
 ```powershell
-python -m pip install -r requirements.txt
+python -m pip install -r requirements-api.txt
 ```
 
 Install dashboard dependencies:
 
 ```powershell
-python -m pip install -r requirements-dashboard.txt
+python -m pip install -r requirements.txt
 ```
 
 TensorFlow is most reliable with Python 3.10 on Windows:
 
 ```powershell
 py -3.10 -m venv .venv310
-.\.venv310\Scripts\python.exe -m pip install -r requirements.txt
+.\.venv310\Scripts\python.exe -m pip install -r requirements-api.txt
 ```
 
 ## Run Locally Without Docker
@@ -580,9 +584,16 @@ Expected response includes:
 
 ### Dashboard on Streamlit Cloud
 
-1. Deploy `app.py`.
-2. Add `API_BASE_URL` pointing to the Railway API URL.
-3. Add any dashboard-specific environment variables.
+1. Deploy `app.py` from the repository root.
+2. In Streamlit Cloud Advanced settings, set Python to `3.12` or `3.10`.
+3. Add secrets:
+
+```toml
+API_BASE_URL="https://YOUR-RAILWAY-API.up.railway.app"
+```
+
+4. Streamlit Cloud will install the root [requirements.txt](/d:/BSSE/Projects/k/requirements.txt:1), which is dashboard-only by design.
+5. If you deployed once with the wrong Python version, delete and redeploy the app because Streamlit Cloud does not change Python versions in place.
 
 ## Submission Checklist
 

@@ -15,9 +15,9 @@ ENV SERVICE=${SERVICE}
 COPY requirements*.txt .
 RUN python -m pip install --upgrade pip setuptools wheel \
     && if [ "$SERVICE" = "dashboard" ]; then \
-        pip install --no-cache-dir --retries 10 --timeout 120 -r requirements-dashboard.txt; \
-    else \
         pip install --no-cache-dir --retries 10 --timeout 120 -r requirements.txt; \
+    else \
+        pip install --no-cache-dir --retries 10 --timeout 120 -r requirements-api.txt; \
     fi
 
 COPY . .

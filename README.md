@@ -4,6 +4,13 @@ An end-to-end web application for forecasting hourly electricity load with real 
 
 The project is built for the assignment requirement around ENTSO-E ActualTotalLoad data. `DE_LU` is the primary assignment country. The app can use ENTSO-E live API data, a normalized ENTSO-E export, or SMARD real Germany/Luxembourg hourly load data. `US48` is also supported through EIA Open Data as a second real live data source. Pakistan CSV support exists only as an optional historical demo and is hidden by default.
 
+## Live Deployment
+
+- GitHub repository: `https://github.com/SULMANZAINKIANI001/End-to-End-Electricity-Load-Forecasting-System`
+- Live dashboard: `https://end-to-end-electricity-load-forecasting-system-uy7cwzabhpzqqzt.streamlit.app/`
+- Live API: `https://end-to-end-electricity-load-forecasting-system-production.up.railway.app/`
+- API docs: `https://end-to-end-electricity-load-forecasting-system-production.up.railway.app/docs`
+
 ## What This App Does
 
 The system lets a user select a country, date range, and forecast horizon, then returns:
@@ -539,7 +546,7 @@ Run tests:
 Current status:
 
 ```text
-12 passed
+21 passed
 ```
 
 Compile/import check:
@@ -552,15 +559,23 @@ Compile/import check:
 
 ### API on Railway
 
+Live API:
+
+```text
+https://end-to-end-electricity-load-forecasting-system-production.up.railway.app/
+```
+
+Deployment steps:
+
 1. Push repository to GitHub.
 2. Create a Railway project.
-3. Deploy the GitHub repo as a Railway service.
+3. Deploy the GitHub repo as a Railway service from the repository root.
 4. Railway will use the committed [railway.json](/d:/BSSE/Projects/k/railway.json:1) and [Dockerfile](/d:/BSSE/Projects/k/Dockerfile:1):
    - Docker builder
    - start command: `uvicorn src.api:app --host 0.0.0.0 --port ${PORT:-8000}`
    - healthcheck path: `/health`
    - restart policy: `ON_FAILURE`
-4. Add environment variables:
+5. Add environment variables:
    - `ENTSOE_API_KEY`
    - `EIA_API_KEY`
    - `CORS_ORIGINS`
@@ -569,8 +584,8 @@ Compile/import check:
    - `ENABLE_DEMO_COUNTRIES=false`
    - `AI_EXPLANATION_ON_FORECAST=false`
    - optional `OPENCODE_API_KEY`
-5. In Railway service settings, generate a public domain.
-6. Test the deployment:
+6. In Railway service settings, generate a public domain.
+7. Test the deployment:
 
 ```text
 https://YOUR-RAILWAY-API.up.railway.app/health
@@ -584,12 +599,20 @@ Expected response includes:
 
 ### Dashboard on Streamlit Cloud
 
+Live dashboard:
+
+```text
+https://end-to-end-electricity-load-forecasting-system-uy7cwzabhpzqqzt.streamlit.app/
+```
+
+Deployment steps:
+
 1. Deploy `app.py` from the repository root.
 2. In Streamlit Cloud Advanced settings, set Python to `3.12` or `3.10`.
 3. Add secrets:
 
 ```toml
-API_BASE_URL="https://YOUR-RAILWAY-API.up.railway.app"
+API_BASE_URL="https://end-to-end-electricity-load-forecasting-system-production.up.railway.app"
 ```
 
 4. Streamlit Cloud will install the root [requirements.txt](/d:/BSSE/Projects/k/requirements.txt:1), which is dashboard-only by design.
@@ -597,8 +620,9 @@ API_BASE_URL="https://YOUR-RAILWAY-API.up.railway.app"
 
 ## Submission Checklist
 
-- GitHub repository link
-- live application URL
+- GitHub repository link: `https://github.com/SULMANZAINKIANI001/End-to-End-Electricity-Load-Forecasting-System`
+- live dashboard URL: `https://end-to-end-electricity-load-forecasting-system-uy7cwzabhpzqqzt.streamlit.app/`
+- live API URL: `https://end-to-end-electricity-load-forecasting-system-production.up.railway.app/`
 - `README.md`
 - `report.md`
 - Dockerfile

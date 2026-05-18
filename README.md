@@ -550,13 +550,33 @@ Compile/import check:
 
 1. Push repository to GitHub.
 2. Create a Railway project.
-3. Use Docker deployment.
+3. Deploy the GitHub repo as a Railway service.
+4. Railway will use the committed [railway.json](/d:/BSSE/Projects/k/railway.json:1) and [Dockerfile](/d:/BSSE/Projects/k/Dockerfile:1):
+   - Docker builder
+   - start command: `uvicorn src.api:app --host 0.0.0.0 --port ${PORT:-8000}`
+   - healthcheck path: `/health`
+   - restart policy: `ON_FAILURE`
 4. Add environment variables:
    - `ENTSOE_API_KEY`
    - `EIA_API_KEY`
    - `CORS_ORIGINS`
+   - `SERVICE=api`
+   - `PRIMARY_COUNTRY_CODE=DE_LU`
+   - `ENABLE_DEMO_COUNTRIES=false`
+   - `AI_EXPLANATION_ON_FORECAST=false`
    - optional `OPENCODE_API_KEY`
-5. Deploy and copy the API URL.
+5. In Railway service settings, generate a public domain.
+6. Test the deployment:
+
+```text
+https://YOUR-RAILWAY-API.up.railway.app/health
+```
+
+Expected response includes:
+
+```json
+{"status":"ok"}
+```
 
 ### Dashboard on Streamlit Cloud
 
